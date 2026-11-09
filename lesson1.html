@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐢 Turtle Magic Code</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+        :root {
+            --pink: #ff9a9e;
+            --blue: #a1c4fd;
+            --purple: #c471ed;
+            --dark: #2d3436;
+            --code-bg: #2d3436;
+            --code-text: #00cec9;
+        }
+
+        body {
+            font-family: 'Nunito', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c471ed 50%, #fbc2eb 100%);
+            color: var(--dark);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.88);
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            border: 3px solid white;
+        }
+
+        h1 { 
+            margin: 0; 
+            font-size: 2.8em; 
+            font-weight: 900;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle { 
+            font-size: 1.3em; 
+            color: #636e72; 
+            margin-top: 10px; 
+            font-weight: 700;
+        }
+
+        .small-subtitle {
+            margin-top: 10px;
+            font-size: 1em;
+            color: #6c5ce7;
+            font-weight: 700;
+        }
+
+        .section-title {
+            text-align: center;
+            color: white;
+            font-size: 1.8em;
+            font-weight: 900;
+            margin: 40px 0 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.25);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+            border: 3px solid rgba(255, 255, 255, 0.85);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+            border-color: var(--purple);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, var(--pink), var(--purple));
+        }
+
+        .command {
+            font-family: 'Courier New', monospace;
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 1.15em;
+            font-weight: 900;
+            display: inline-block;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 0 #00000030;
+        }
+
+        .meaning {
+            font-size: 1.15em;
+            font-weight: 900;
+            margin-bottom: 10px;
+            color: #2d3436;
+        }
+
+        .english-hint {
+            font-size: 0.95em;
+            color: #636e72;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .scratch-analogy {
+            background: linear-gradient(to right, #ffeaa7, #fdcb6e);
+            color: #d35400;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 0.95em;
+            font-weight: 800;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 0 #e1b12c;
+        }
+
+        .example {
+            margin-top: 12px;
+            font-size: 0.9em;
+            color: #636e72;
+            padding: 10px 12px;
+            background: #f1f2f6;
+            border-radius: 12px;
+        }
+
+        .example code {
+            background: #dfe6e9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #d63031;
+            font-weight: bold;
+        }
+
+        .tip-box {
+            background: rgba(255, 255, 255, 0.92);
+            border: 4px dashed var(--purple);
+            border-radius: 25px;
+            padding: 30px;
+            margin-top: 50px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .highlight {
+            background-color: #ffeaa7;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .mini-code {
+            text-align: left;
+            background: #2d3436;
+            color: #55efc4;
+            padding: 20px;
+            border-radius: 18px;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            font-weight: 800;
+            margin: 40px 0 10px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.25);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🐢 Turtle Magic Code</h1>
+        <div class="subtitle">Your fun Python Turtle cheat sheet!</div>
+        <div class="small-subtitle">Draw with code. Change numbers. Make magic.</div>
+    </header>
+
+    <div class="section-title">🚀 1. Start</div>
+    <div class="grid">
+        <div class="card">
+            <div class="command">from turtle import *</div>
+            <div class="meaning">Bring turtle magic into your code!</div>
+            <div class="english-hint">Import all turtle commands.</div>
+            <div class="scratch-analogy">🧩 Like adding the Pen extension in Scratch.</div>
+        </div>
+
+        <div class="card">
+            <div class="command">bgcolor("lightblue")</div>
+            <div class="meaning">Change the background color 🌈</div>
+            <div class="english-hint">Background color.</div>
+            <div class="example">
+                Try: <code>"pink"</code>, <code>"yellow"</code>, <code>"black"</code>, <code>"lightgreen"</code>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">🏃 2. Movement</div>
+    <div class="grid">
+        <div class="card">
+            <div class="command">forward(100)</div>
+            <div class="meaning">Move forward 100 steps</div>
+            <div class="english-hint">Go straight ahead.</div>
+            <div class="scratch-analogy">🧩 Like “move 100 steps” in Scratch.</div>
+        </div>
+
+        <div class="card">
+            <div class="command">backward(100)</div>
+            <div class="meaning">Move backward 100 steps</div>
+            <div class="english-hint">Go back.</div>
+            <div class="scratch-analogy">🧩 Like “move -100 steps” in Scratch.</div>
+        </div>
+
+        <div class="card">
+            <div class="command">left(90)</div>
+            <div class="meaning">Turn left 90 degrees ↺</div>
+            <div class="english-hint">Rotate to the left.</div>
+            <div class="scratch-analogy">🧩 Like “turn left 90 degrees”.</div>
+        </div>
+
+        <div class="card">
+            <div class="command">right(90)</div>
+            <div class="meaning">Turn right 90 degrees ↻</div>
+            <div class="english-hint">Rotate to the right.</div>
+            <div class="scratch-analogy">🧩 Like “turn right 90 degrees”.</div>
+        </div>
+
+        <div class="card">
+            <div class="command">goto(100, 100)</div>
+            <div class="meaning">Go to a point! Magic teleport 🌟</div>
+            <div class="english-hint">Go to X and Y coordinates.</div>
+            <div class="scratch-analogy">🧩 Like “go to x: 100 y: 100”.</div>
+            <div class="example">
+                💡 <b>X</b> means left/right. <b>Y</b> means up/down.<br>
+                The center is <code>(0, 0)</code>.
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">🎨 3. Color and Pen</div>
+    <div class="grid">
+        <div class="card">
+            <div class="command">color("red")</div>
+            <div class="meaning">Change the line color</div>
+            <div class="english-hint">Set the turtle and pen color.</div>
+            <div class="example">
+                Try: <code>"red"</code>, <code>"blue"</code>, <code>"green"</code>,
+                <code>"purple"</code>, <code>"orange"</code>, <code>"gold"</code>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command">pensize(5)</div>
+            <div class="meaning">Make the line thicker</div>
+            <div class="english-hint">Pen size = line width.</div>
+            <div class="scratch-analogy">🧩 Like “set pen size” in Scratch.</div>
+            <div class="example">
+                Try <code>pensize(1)</code> for a thin line or <code>pensize(10)</code> for a thick line.
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command">penup()</div>
+            <div class="meaning">Fly mode ✈️ No drawing!</div>
+            <div class="english-hint">Lift the pen up.</div>
+            <div class="scratch-analogy">🧩 Pen Up.</div>
+            <div class="example">
+                Use it before <code>goto()</code> if you don’t want a line.
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command">pendown()</div>
+            <div class="meaning">Drawing mode ✏️ Draw again!</div>
+            <div class="english-hint">Put the pen down.</div>
+            <div class="scratch-analogy">🧩 Pen Down.</div>
+            <div class="example">
+                Use it after <code>penup()</code> when you are ready to draw.
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">✨ 4. Superpowers</div>
+    <div class="grid">
+        <div class="card">
+            <div class="command">speed(3)</div>
+            <div class="meaning">Change drawing speed</div>
+            <div class="english-hint">Speed from 1 to 10.</div>
+            <div class="example">
+                <code>1</code> = slow 🐌<br>
+                <code>10</code> = fast 🚀<br>
+                <code>0</code> = instant ⚡
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command">circle(50)</div>
+            <div class="meaning">Draw a circle ⭕</div>
+            <div class="english-hint">The number is the radius.</div>
+            <div class="example">
+                Half-circle: <code>circle(50, 180)</code><br>
+                Full circle: <code>circle(50)</code>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command">hideturtle()</div>
+            <div class="meaning">Invisible turtle 🥷</div>
+            <div class="english-hint">Hide the turtle.</div>
+            <div class="scratch-analogy">🧩 Like hiding a sprite.</div>
+            <div class="example">
+                Use it at the end to show only your beautiful drawing.
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">🎭 5. Creativity</div>
+    <div class="grid">
+        <div class="card" style="border-left: 6px solid #00b894;">
+            <div class="command">write("Hello!")</div>
+            <div class="meaning">Write text on the screen ✍️</div>
+            <div class="english-hint">Write words with Python.</div>
+            <div class="example">
+                Text must be inside quotes!<br><br>
+                Bigger text:<br>
+                <code>write("Hi!", font=("Arial", 20, "bold"))</code>
+            </div>
+        </div>
+
+        <div class="card" style="border-left: 6px solid #00b894;">
+            <div class="command">shape("turtle")</div>
+            <div class="meaning">Change the turtle shape 🐢</div>
+            <div class="english-hint">Make your turtle look different.</div>
+            <div class="example">
+                Try: <code>"turtle"</code>, <code>"arrow"</code>, <code>"circle"</code>,
+                <code>"square"</code>, <code>"triangle"</code>, <code>"classic"</code>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">🎁 6. Fill Shapes</div>
+    <div class="grid">
+        <div class="card" style="border-left: 6px solid #fd79a8;">
+            <div class="command">begin_fill()</div>
+            <div class="meaning">Start filling a shape 🖌️</div>
+            <div class="english-hint">Start coloring inside.</div>
+            <div class="example">
+                💡 First choose a color with <code>color("red")</code>,
+                then draw a shape.
+            </div>
+        </div>
+
+        <div class="card" style="border-left: 6px solid #fd79a8;">
+            <div class="command">end_fill()</div>
+            <div class="meaning">Finish filling a shape ✅</div>
+            <div class="english-hint">Stop coloring inside.</div>
+            <div class="example">
+                💡 Use it when your shape is finished.
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">🏁 7. Finish</div>
+    <div class="grid">
+        <div class="card">
+            <div class="command">exitonclick()</div>
+            <div class="meaning">Click the picture to close the window</div>
+            <div class="english-hint">Exit on click.</div>
+            <div class="example">
+                Put this at the very end of your code.
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="command">mainloop()</div>
+            <div class="meaning">Keep the turtle window open</div>
+            <div class="english-hint">Start the turtle window loop.</div>
+            <div class="example">
+                Another way to keep the drawing window open.<br>
+                Usually use <code>exitonclick()</code> or <code>mainloop()</code>, not both.
+            </div>
+        </div>
+    </div>
+
+    <div class="tip-box">
+        <h3>💡 Pro Tips</h3>
+        <p>
+            1. Commands need parentheses: <span class="highlight">()</span><br>
+            2. Words need quotes: <span class="highlight">"red"</span>, <span class="highlight">"Hello!"</span><br>
+            3. Numbers do not need quotes: <code>forward(100)</code> ✅, not <code>forward("100")</code> ❌
+        </p>
+
+        <p style="font-size: 1.2em; margin-top: 15px;">
+            🎮 <i>Coding is like magic. You just need to know the right words!</i>
+        </p>
+    </div>
+
+    <div class="tip-box">
+        <h3>🌟 Mini Example: Colorful Square</h3>
+        <p>Try this code. Then change the color, size, and speed!</p>
+
+        <div class="mini-code">
+from turtle import *<br>
+<br>
+bgcolor("lightblue")<br>
+shape("turtle")<br>
+color("purple")<br>
+pensize(5)<br>
+speed(3)<br>
+<br>
+begin_fill()<br>
+forward(100)<br>
+left(90)<br>
+forward(100)<br>
+left(90)<br>
+forward(100)<br>
+left(90)<br>
+forward(100)<br>
+left(90)<br>
+end_fill()<br>
+<br>
+penup()<br>
+goto(0, 130)<br>
+write("My Turtle Art!", font=("Arial", 20, "bold"))<br>
+hideturtle()<br>
+<br>
+exitonclick()
+        </div>
+    </div>
+
+    <footer>
+        🐢 Keep coding, keep drawing, keep creating!
+    </footer>
+</div>
+
+</body>
+</html>
