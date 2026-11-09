@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 My Python Journey</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+        :root {
+            --pink: #ff9a9e;
+            --blue: #a1c4fd;
+            --purple: #c471ed;
+            --dark: #2d3436;
+        }
+
+        body {
+            font-family: 'Nunito', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c471ed 50%, #fbc2eb 100%);
+            color: var(--dark);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.88);
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            border: 3px solid white;
+        }
+
+        h1 { 
+            margin: 0; 
+            font-size: 2.8em; 
+            font-weight: 900;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle { 
+            font-size: 1.3em; 
+            color: #636e72; 
+            margin-top: 10px; 
+            font-weight: 700;
+        }
+
+        .progress-info {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 20px;
+            background: linear-gradient(to right, #ffeaa7, #fdcb6e);
+            border-radius: 20px;
+            font-weight: 900;
+            color: #d35400;
+            box-shadow: 0 4px 0 #e1b12c;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+            border: 3px solid rgba(255, 255, 255, 0.85);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+            border-color: var(--purple);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, var(--pink), var(--purple));
+        }
+
+        .lesson-number {
+            font-size: 1em;
+            font-weight: 900;
+            color: var(--purple);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .lesson-emoji {
+            font-size: 2.5em;
+            margin: 10px 0;
+        }
+
+        .lesson-title {
+            font-size: 1.4em;
+            font-weight: 900;
+            color: var(--dark);
+            margin-bottom: 15px;
+            min-height: 60px;
+        }
+
+        .lesson-description {
+            font-size: 0.95em;
+            color: #636e72;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .lesson-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        .link-btn {
+            display: block;
+            text-align: center;
+            padding: 10px 15px;
+            background: linear-gradient(to right, #a1c4fd, #c471ed);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+
+        .link-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .link-btn.secondary {
+            background: linear-gradient(to right, #ffeaa7, #fdcb6e);
+            color: #d35400;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .status-new {
+            background: #55efc4;
+            color: #00695c;
+        }
+
+        .status-done {
+            background: #fdcb6e;
+            color: #d35400;
+        }
+
+        .status-current {
+            background: #ff7675;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            font-weight: 800;
+            margin: 40px 0 10px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.25);
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🚀 My Python Journey</h1>
+        <div class="subtitle">15 lessons of fun, code, and creativity!</div>
+        <div class="progress-info">⭐ Progress: 0 / 15 lessons</div>
+    </header>
+
+    <div class="grid">
+
+        <!-- ======================================================= -->
+        <!-- УРОК 1 -->
+        <!-- Чтобы изменить тему урока: замените текст в <div class="lesson-title"> -->
+        <!-- Чтобы изменить ссылку: замените href="#" на реальную ссылку -->
+        <!-- Чтобы изменить статус: замените class="status-new" на status-current или status-done -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-current">Now</span>
+            <div class="lesson-number">Lesson 1</div>
+            <div class="lesson-emoji">🐢</div>
+            <div class="lesson-title">Turtle Magic</div>
+            <div class="lesson-description">
+                Draw your first pictures with Python Turtle!
+            </div>
+            <div class="lesson-links">
+                <!-- ЗАМЕНИТЕ ССЫЛКУ НА МАТЕРИАЛЫ УРОКА -->
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <!-- ЗАМЕНИТЕ ССЫЛКУ НА ДОПОЛНИТЕЛЬНЫЙ МОДУЛЬ -->
+                <a href="#" class="link-btn secondary">🎮 Bonus: Turtle Cheat Sheet</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 2 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 2</div>
+            <div class="lesson-emoji">📦</div>
+            <!-- ЗАМЕНИТЕ ТЕМУ УРОКА ЗДЕСЬ -->
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 3 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 3</div>
+            <div class="lesson-emoji">💬</div>
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 4 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 4</div>
+            <div class="lesson-emoji">🔀</div>
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 5 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 5</div>
+            <div class="lesson-emoji">🔄</div>
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 6 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 6</div>
+            <div class="lesson-emoji">🔁</div>
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 7 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 7</div>
+            <div class="lesson-emoji">📋</div>
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 8 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 8</div>
+            <div class="lesson-emoji">🛠️</div>
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 9 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 9</div>
+            <div class="lesson-emoji">🎲</div>
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 10 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 10</div>
+            <div class="lesson-emoji">🔤</div>
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 11 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 11</div>
+            <div class="lesson-emoji">📖</div>
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 12 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 12</div>
+            <div class="lesson-emoji">🎨</div>
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 13 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 13</div>
+            <div class="lesson-emoji">🎮</div>
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 14 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 14</div>
+            <div class="lesson-emoji">🏆</div>
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- УРОК 15 -->
+        <!-- ======================================================= -->
+        <div class="card">
+            <span class="status-badge status-new">New</span>
+            <div class="lesson-number">Lesson 15</div>
+            <div class="lesson-emoji">🎉</div>
+            <div class="lesson-title">Your Topic Here</div>
+            <div class="lesson-description">
+                Short description of the lesson.
+            </div>
+            <div class="lesson-links">
+                <a href="#" class="link-btn">📚 Lesson Materials</a>
+                <a href="#" class="link-btn secondary">🎮 Extra Module</a>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        🌟 Keep coding, keep creating, keep having fun! 🌟
+    </footer>
+</div>
+
+</body>
+</html>
