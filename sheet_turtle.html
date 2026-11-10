@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐢 Turtle Quick Reference</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            color: #2d3436;
+        }
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-top: 0;
+            font-size: 2em;
+        }
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+        .section h2 {
+            margin-top: 0;
+            color: #764ba2;
+            font-size: 1.3em;
+        }
+        .cmd {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .cmd-code {
+            font-weight: bold;
+            color: #d63031;
+            background: #dfe6e9;
+            padding: 4px 8px;
+            border-radius: 5px;
+        }
+        .cmd-desc {
+            color: #636e72;
+            font-style: italic;
+        }
+        .tip {
+            background: #ffeaa7;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #d35400;
+        }
+        .new-badge {
+            background: #ff7675;
+            color: white;
+            font-size: 0.7em;
+            padding: 2px 6px;
+            border-radius: 5px;
+            margin-left: 5px;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐢 Turtle Quick Reference</h1>
+
+        <div class="section">
+            <h2>🚀 Start & Window</h2>
+            <div class="cmd">
+                <span class="cmd-code">from turtle import *</span>
+                <span class="cmd-desc">import commands</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">bgcolor("lightblue")</span>
+                <span class="cmd-desc">background color</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">title("My Game") <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">window title</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">setup(800, 600) <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">window size</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏃 Movement</h2>
+            <div class="cmd">
+                <span class="cmd-code">forward(100)</span>
+                <span class="cmd-desc">move forward</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">backward(100)</span>
+                <span class="cmd-desc">move backward</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">left(90)</span>
+                <span class="cmd-desc">turn left</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">right(90)</span>
+                <span class="cmd-desc">turn right</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">goto(x, y)</span>
+                <span class="cmd-desc">teleport to point</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">home() <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">return to center (0,0)</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎨 Color & Pen</h2>
+            <div class="cmd">
+                <span class="cmd-code">color("red")</span>
+                <span class="cmd-desc">set color</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">pensize(5)</span>
+                <span class="cmd-desc">line thickness</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">penup()</span>
+                <span class="cmd-desc">stop drawing</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">pendown()</span>
+                <span class="cmd-desc">start drawing</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✨ Special</h2>
+            <div class="cmd">
+                <span class="cmd-code">speed(3)</span>
+                <span class="cmd-desc">1=slow, 10=fast</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">circle(50)</span>
+                <span class="cmd-desc">draw circle</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">write("Hi!")</span>
+                <span class="cmd-desc">write text</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">hideturtle()</span>
+                <span class="cmd-desc">hide turtle</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">shape("turtle")</span>
+                <span class="cmd-desc">change shape</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">dot(20, "red") <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">draw a dot</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">stamp() <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">leave turtle print</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">undo() <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">undo last action</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧹 Screen Control</h2>
+            <div class="cmd">
+                <span class="cmd-code">clear() <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">erase all drawings</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">reset() <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">erase all + go home</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📍 Coordinates</h2>
+            <div class="cmd">
+                <span class="cmd-code">xcor() <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">current X position</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">ycor() <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">current Y position</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">heading() <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">current direction</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎮 For Mini-Games</h2>
+            <div class="cmd">
+                <span class="cmd-code">listen() <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">listen to keys</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">onkey(func, "Up") <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">key press action</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">onclick(func) <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">mouse click action</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚡ Speed Up</h2>
+            <div class="cmd">
+                <span class="cmd-code">tracer(0) <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">instant drawing</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">update() <span class="new-badge">NEW</span></span>
+                <span class="cmd-desc">refresh screen</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎁 Fill Shapes</h2>
+            <div class="cmd">
+                <span class="cmd-code">begin_fill()</span>
+                <span class="cmd-desc">start filling</span>
+            </div>
+            <div class="cmd">
+                <span class="cmd-code">end_fill()</span>
+                <span class="cmd-desc">finish filling</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏁 Finish</h2>
+            <div class="cmd">
+                <span class="cmd-code">exitonclick()</span>
+                <span class="cmd-desc">click to close</span>
+            </div>
+        </div>
+
+        <div class="tip">
+            💡 Remember: words need quotes "red", numbers don't: forward(100)<br>
+            🆕 NEW = new commands added today!
+        </div>
+    </div>
+</body>
+</html>
