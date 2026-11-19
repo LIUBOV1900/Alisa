@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mystery of the Ancient Scroll — Level 2</title>
+<style>
+  :root{
+    --bg:#0d1420; --panel:#1b2436; --panel-2:#232f45;
+    --text:#f4e9d8; --accent:#d9a441; --accent-2:#8fd6ff;
+    --danger:#ff7b6b; --ok:#84ff9d;
+    --cell:min(9vw, 42px);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;font-family:Georgia,"Times New Roman",serif;color:var(--text);
+    background:
+      radial-gradient(circle at top, rgba(217,164,65,.12), transparent 30%),
+      radial-gradient(circle at bottom, rgba(143,214,255,.08), transparent 25%),
+      var(--bg);}
+  button{font:inherit;border:0;border-radius:12px;padding:10px 14px;cursor:pointer;
+    box-shadow:0 3px 0 rgba(0,0,0,.35);transition:transform .08s,opacity .2s}
+  button:active{transform:translateY(2px)}
+  .primary{background:linear-gradient(180deg,#e8b85b,#b97f1f);color:#221204;font-weight:bold}
+  .secondary{background:linear-gradient(180deg,#8fd6ff,#4d97c7);color:#082438;font-weight:bold}
+  .danger{background:linear-gradient(180deg,#ff9a8d,#d9534f);color:#3d0907;font-weight:bold}
+  .ghost{background:rgba(255,255,255,.12);color:var(--text)}
+  .big{font-size:1.1rem;padding:14px 22px}
+  #app{max-width:980px;margin:0 auto;padding:16px;text-align:center}
+  header h1{margin:8px 0 4px;font-size:clamp(1.4rem,4vw,2.5rem);color:var(--accent);
+    text-shadow:0 0 14px rgba(217,164,65,.35)}
+  .subtitle{margin-bottom:14px;color:#d8c9a8;font-style:italic}
+  .lvl-badge{display:inline-block;background:linear-gradient(180deg,#6a4dc7,#4a2f9a);color:#fff;
+    border-radius:999px;padding:6px 16px;font-weight:bold;font-size:1rem;margin-bottom:8px;
+    box-shadow:0 0 16px rgba(120,90,220,.4)}
+  .stats{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;align-items:center;margin-bottom:16px}
+  .badge{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+    border-radius:999px;padding:8px 12px;font-weight:bold}
+  .badge.deaths{background:rgba(255,80,80,.15);border-color:rgba(255,80,80,.3)}
+  main{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+    border-radius:20px;padding:16px;box-shadow:0 0 30px rgba(0,0,0,.35);position:relative}
+  #pauseOverlay{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;
+    align-items:center;justify-content:center;border-radius:20px;z-index:10;
+    font-size:2rem;font-weight:bold;color:var(--accent);backdrop-filter:blur(2px)}
+  #board{display:grid;gap:3px;justify-content:center;user-select:none;transition:transform .08s}
+  #board.shake{animation:shakeBoard .4s}
+  @keyframes shakeBoard{
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-8px)}
+    50%{transform:translateX(8px)}
+    75%{transform:translateX(-4px)}
+  }
+  .cell{width:var(--cell);height:var(--cell);display:flex;align-items:center;justify-content:center;
+    border-radius:8px;font-size:calc(var(--cell)*.56);
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.05);
+    position:relative;transition:background .15s}
+  .cell.wall{background:#2b3550;border-color:rgba(255,255,255,.10);box-shadow:inset 0 0 10px rgba(0,0,0,.35)}
+  .cell.floor{color:rgba(244,233,216,.35)}
+  .cell.seal{animation:pulse 1.2s infinite}
+  .cell.player{background:rgba(217,164,65,.18);box-shadow:0 0 14px rgba(217,164,65,.20)}
+  .cell.player.invulnerable{animation:invulnBlink .3s infinite}
+  .cell.player.danger-near{background:rgba(255,80,80,.25);box-shadow:0 0 18px rgba(255,80,80,.4)}
+  @keyframes invulnBlink{0%,100%{opacity:1}50%{opacity:.4}}
+  .cell.done{color:#ffe28a}
+  .cell.enemy{background:rgba(255,80,80,.20);box-shadow:0 0 16px rgba(255,80,80,.4)}
+  .cell.enemy::after{content:"";position:absolute;inset:-2px;border-radius:10px;border:2px solid rgba(255,80,80,.6);animation:dangerPulse .8s infinite}
+  .cell.enemy.chasing{background:rgba(255,40,40,.38);box-shadow:0 0 24px rgba(255,40,40,.65)}
+  .cell.enemy.chasing::before{content:"!";position:absolute;top:-4px;right:0;color:#ff3333;font-weight:bold;font-size:.75rem;text-shadow:0 0 6px #ff0000;animation:dangerPulse .35s infinite;z-index:2}
+  .cell.path-bat{background:rgba(180,100,255,.07)}
+  .cell.path-spider{background:rgba(100,255,100,.07)}
+  .cell.path-rat{background:rgba(255,180,100,.07)}
+  .cell.path-ghost{background:rgba(150,200,255,.09)}
+  @keyframes dangerPulse{0%,100%{opacity:.4}50%{opacity:1}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  #controls{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(2,48px);
+    gap:8px;justify-content:center;margin-top:16px}
+  #controls button{font-size:1.2rem;background:linear-gradient(180deg,#3a4a6e,#242f4a);
+    color:var(--text);border:1px solid rgba(255,255,255,.10)}
+  #controls button:nth-child(1){grid-column:2;grid-row:1}
+  #controls button:nth-child(2){grid-column:1;grid-row:2}
+  #controls button:nth-child(3){grid-column:2;grid-row:2}
+  #controls button:nth-child(4){grid-column:3;grid-row:2}
+  .fires{margin-top:14px;font-size:1.3rem;opacity:.85}
+  .overlay{position:fixed;inset:0;background:rgba(5,3,10,.82);display:flex;
+    align-items:center;justify-content:center;padding:16px;z-index:50}
+  .hidden{display:none!important}
+  .modal{width:min(92vw,780px);max-height:92vh;overflow:auto;
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    border:2px solid rgba(217,164,65,.30);border-radius:20px;padding:20px;
+    box-shadow:0 0 40px rgba(0,0,0,.45);text-align:left}
+  .modal h2{margin-top:0;color:var(--accent);text-align:center}
+  .modal h3{color:var(--accent-2);margin-bottom:8px}
+  .modal p,.modal li{line-height:1.5}
+  .modal code{font-family:Consolas,"Courier New",monospace;
+    background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.08);
+    border-radius:6px;padding:1px 5px;color:#ffe28a}
+  .warning{background:rgba(255,123,107,.10);border:1px solid rgba(255,123,107,.25);
+    border-radius:12px;padding:10px;font-weight:bold;margin-top:12px}
+  .enemy-info{background:rgba(255,80,80,.08);border:1px solid rgba(255,80,80,.3);
+    border-radius:12px;padding:12px;margin:12px 0}
+  #taskCode{font-family:Consolas,"Courier New",monospace;font-size:1.15rem;
+    background:#0e1420;color:#d8ffdf;padding:16px;border-radius:12px;
+    border:1px solid rgba(255,255,255,.10);white-space:pre-wrap;overflow-x:auto}
+  #answerInput{width:100%;margin-top:12px;padding:12px 14px;font:inherit;
+    border-radius:12px;border:2px solid rgba(217,164,65,.45);
+    background:rgba(0,0,0,.22);color:var(--text);outline:none}
+  #answerInput:focus{border-color:var(--accent);box-shadow:0 0 10px rgba(217,164,65,.25)}
+  .feedback{min-height:24px;margin-top:10px;font-weight:bold}
+  .feedback.good{color:var(--ok)}
+  .feedback.bad{color:var(--danger)}
+  .hint{min-height:24px;margin-top:8px;color:var(--accent-2)}
+  .modal-buttons{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .modal-buttons button{flex:1 1 auto}
+  .secret{font-size:1.1rem;font-weight:bold;color:#ffe28a;
+    background:rgba(217,164,65,.08);border:1px dashed rgba(217,164,65,.35);
+    border-radius:14px;padding:12px;text-align:center}
+  .potion-note{font-weight:bold;color:var(--accent-2)}
+  .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:14px 0}
+  .rule{background:rgba(0,0,0,.22);border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px}
+  .rule b{color:var(--accent)}
+  #toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);
+    background:linear-gradient(180deg,#ff6b5b,#d94030);color:#fff;
+    padding:14px 22px;border-radius:14px;font-weight:bold;
+    box-shadow:0 8px 24px rgba(0,0,0,.5);z-index:100;
+    transition:transform .4s cubic-bezier(.17,.67,.35,1.3),opacity .3s;
+    opacity:0;pointer-events:none;text-align:center;max-width:90vw}
+  #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  @media (max-width:560px){.modal-buttons button{min-width:45%}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>⚔ MYSTERY OF THE ANCIENT SCROLL ⚔</h1>
+    <div class="lvl-badge">🏚 LEVEL 2 — THE DARK CATACOMBS</div>
+    <div class="subtitle">Strings: indices, slices, method chaining</div>
+    <div class="stats">
+      <span class="badge" id="potions">🧪 Potions: 3</span>
+      <span class="badge" id="fragments">📜 Scrolls: 0/8</span>
+      <span class="badge deaths" id="deaths">💀 Deaths: 0</span>
+      <button id="diaryBtn" class="secondary">📖 Diary</button>
+      <button id="soundBtn" class="ghost">🔊</button>
+      <button id="restartBtn" class="ghost">↻ Restart</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="pauseOverlay" class="hidden">⏸ PAUSED</div>
+    <div id="board"></div>
+    <div id="controls">
+      <button data-dir="up">▲</button>
+      <button data-dir="left">◀</button>
+      <button data-dir="down">▼</button>
+      <button data-dir="right">▶</button>
+    </div>
+    <div class="fires">🔥🔥🔥🔥</div>
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<!-- Intro Modal -->
+<div id="introModal" class="overlay">
+  <div class="modal">
+    <h2>🏚 LEVEL 2</h2>
+    <h3>🧭 HOW TO PLAY</h3>
+    <ul>
+      <li>Move: Arrow keys / WASD / on-screen buttons.</li>
+      <li>🔒 = a seal with a Python task. Figure out exactly what <code>print()</code> outputs.</li>
+      <li>🧪 Hint potions — only <b>3 for the entire level</b>!</li>
+    </ul>
+
+    <h3>⚠ LEVEL 2 — MORE DANGEROUS!</h3>
+    <div class="enemy-info">
+      <p>You descended into the <b>Dark Catacombs</b>. There are <b>4 hungry beasts</b> here — faster and meaner than before!</p>
+      <p>The scroll tasks are trickier too: <b>indices, slices, method chaining</b>. Think carefully and keep your eyes open!</p>
+    </div>
+    <p class="potion-note">🧪 Save your potions — the tasks are harder!</p>
+    <div class="modal-buttons">
+      <button id="startBtn" class="primary big">▶ DESCEND INTO THE CATACOMBS</button>
+    </div>
+  </div>
+</div>
+
+<!-- Diary Modal -->
+<div id="diaryModal" class="overlay hidden">
+  <div class="modal">
+    <h2>📖 SEEKER'S DIARY — LEVEL 2</h2>
+    <h3>✨ NEW STRING SPELLS</h3>
+    <div class="rules">
+      <div class="rule"><b>s[0], s[2]</b> — Zero-based indexing.<br><code>"python"[2] → 't'</code></div>
+      <div class="rule"><b>s[-1]</b> — Last character.<br><code>"dragon"[-1] → 'n'</code></div>
+      <div class="rule"><b>s[start:stop]</b> — Slice, 'stop' is NOT included.<br><code>"treasure"[0:4] → 'trea'</code></div>
+      <div class="rule"><b>s[::-1]</b> — Reverse the string.<br><code>"cat"[::-1] → 'tac'</code></div>
+      <div class="rule"><b>s.strip().lower()</b> — Chain methods left to right.<br><code>"  MAGE  ".strip().lower() → 'mage'</code></div>
+      <div class="rule"><b>s.replace("old", "new")</b> — replaces parts of a string.<br><code>"frog".replace("fr", "dr") → 'dog'</code></div>
+      <div class="rule"><b>count() + count()</b> — Results can be added.<br><code>"abracadabra".count("a") + ... → number</code></div>
+      <div class="rule"><b>s[1:4].upper()</b> — Slice, then apply method.<br><code>"python"[1:4].upper() → 'YTH'</code></div>
+    </div>
+
+    <h3>⚠ ENEMIES — HOW TO SURVIVE</h3>
+    <div class="enemy-info">
+      <p>In the catacombs, there are <b>4 beasts</b>: a bat, a spider, a rat, and a <b>ghost 👻</b>. The ghost sees the furthest!</p>
+      <p>If a red <b>'!'</b> appears above an enemy, it spotted you and is chasing. <b>Turn into a perpendicular corridor</b> to break its line of sight!</p>
+      <p>The more seals you collect, the <b>faster</b> enemies become.</p>
+    </div>
+    <ul>
+      <li>Enemies move <b>constantly</b>, even when you stand still.</li>
+      <li>When you open a task, enemies freeze (pause).</li>
+      <li>After dying, you have 2 seconds of immunity — run!</li>
+    </ul>
+
+    <p class="warning">⚠ Code traps: case matters ('Cat' ≠ 'cat'); counting starts at 0; 'stop' in slice is NOT included; a space is also a character!</p>
+    <div class="modal-buttons">
+      <button id="diaryCloseBtn" class="primary">✕ CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<!-- Puzzle Modal -->
+<div id="puzzleModal" class="overlay hidden">
+  <div class="modal">
+    <h2>📜 SCROLL FRAGMENT</h2>
+    <h3 id="taskTitle"></h3>
+    <p>What will this code print? Enter the answer <b>exactly</b> as Python outputs it.</p>
+    <p style="color:var(--accent-2);font-size:.9rem">⏸ Time has frozen — enemies are waiting, think calmly!</p>
+    <pre id="taskCode"></pre>
+    <input id="answerInput" type="text" autocomplete="off" placeholder="Exact answer...">
+    <div id="feedback" class="feedback"></div>
+    <div id="hintText" class="hint"></div>
+    <div class="modal-buttons">
+      <button id="checkBtn" class="primary">✔ CHECK</button>
+      <button id="hintBtn" class="secondary">🧪 HINT</button>
+      <button id="runBtn" class="danger">🏃 FLEE</button>
+    </div>
+  </div>
+</div>
+
+<!-- Win Modal -->
+<div id="winModal" class="overlay hidden">
+  <div class="modal">
+    <h2>🏆 CATACOMBS CLEARED!</h2>
+    <p>You collected all 8 scrolls and <b>survived the 4 beasts</b>! The ancient text reads:</p>
+    <div class="secret">"Indices, slices, and method chains have bowed to you. You have become a true String Mage! Level 3 awaits…"</div>
+    <p id="winStats" style="text-align:center;font-weight:bold;margin-top:12px"></p>
+    <div class="modal-buttons">
+      <button id="playAgainBtn" class="primary big">↻ PLAY AGAIN</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ LEVEL 2 TASKS: Adapted for English (NO LISTS) ============
+const TASKS = [
+  { id:1, title:"Seal I — Indexing", code:`s = "python"\nprint(s[2])`, answer:`t`,
+    hint:`Indices start at 0: p=0, y=1, t=2. So s[2] is the third letter.` },
+  { id:2, title:"Seal II — Negative Index", code:`s = "dragon"\nprint(s[-1])`, answer:`n`,
+    hint:`Negative index counts from the end: -1 is the very last letter.` },
+  { id:3, title:"Seal III — Slicing", code:`s = "treasure"\nprint(s[0:4])`, answer:`trea`,
+    hint:`Slice takes letters from index 0 up to 3 (index 4 is NOT included). That's the first 4 letters.` },
+  { id:4, title:"Seal IV — Reversing", code:`s = "cat"\nprint(s[::-1])`, answer:`tac`,
+    hint:`[::-1] flips the string backwards: c→a→t becomes t→a→c.` },
+  { id:5, title:"Seal V — Method Chaining", code:`s = "  MAGE  "\nprint(s.strip().lower())`, answer:`mage`,
+    hint:`First, strip() removes outer spaces. Then, lower() makes letters lowercase. Methods run left to right.` },
+  { id:6, title:"Seal VI — Replace", code:`s = "frog"\nprint(s.replace("fr", "dr"))`, answer:`dog`,
+    hint:`replace("fr", "dr") finds the "fr" part of the string and changes it to "dr".` },
+  { id:7, title:"Seal VII — Count & Math", code:`s = "abracadabra"\nprint(s.count("a") + s.count("b"))`, answer:`7`,
+    hint:`count("a") finds how many "a"s there are (5), count("b") finds "b"s (2). Then they are added together.` },
+  { id:8, title:"Seal VIII — Slice + Upper", code:`s = "python"\nprint(s[1:4].upper())`, answer:`YTH`,
+    hint:`First, slice s[1:4] takes indices 1 to 3 ("yth"). Then, upper() makes them uppercase ("YTH").` }
+];
+
+// Level 2 Map: Larger, 4 long corridors for 4 enemies
+const MAP = [
+  "###############",   // 0
+  "#P1....2....3.#",   // 1  top corridor, seals 1,2,3
+  "#.............#",   // 2  open corridor (bat horizontal)
+  "#.####.###.##.#",   // 3  walls, passages at x=1,6,10,13
+  "#.............#",   // 4  open corridor (rat horizontal)
+  "#4....5....6..#",   // 5  seals 4,5,6
+  "#.............#",   // 6  open corridor
+  "#.####.###.##.#",   // 7  walls, passages at x=1,6,10,13
+  "#.............#",   // 8  open corridor
+  "#7....8.......#",   // 9  seals 7,8 and exit area
+  "###############"    // 10
+];
+
+// ============ 4 ENEMIES: Faster and more aggressive ============
+const ENEMIES = [
+  { emoji:"🦇", name:"Bat", axis:"h", line:2, min:1, max:13,
+    startDir:1, canChase:false, burstChance:0.35, turnChance:0.07, pathClass:"path-bat" },
+  { emoji:"🕷️", name:"Spider", axis:"v", line:6, min:2, max:8,
+    startDir:1, canChase:true, chaseRange:5, chaseSteps:2, burstChance:0.12, turnChance:0.03, pathClass:"path-spider" },
+  { emoji:"🐀", name:"Rat", axis:"h", line:4, min:1, max:13,
+    startDir:1, canChase:true, chaseRange:4, chaseSteps:1, burstChance:0.22, turnChance:0.10, pathClass:"path-rat" },
+  { emoji:"👻", name:"Ghost", axis:"v", line:10, min:2, max:8,
+    startDir:1, canChase:true, chaseRange:6, chaseSteps:2, burstChance:0.15, turnChance:0.04, pathClass:"path-ghost" }
+];
+
+const board = document.getElementById("board");
+const pauseOverlay = document.getElementById("pauseOverlay");
+const potionsEl = document.getElementById("potions");
+const fragmentsEl = document.getElementById("fragments");
+const deathsEl = document.getElementById("deaths");
+const diaryBtn = document.getElementById("diaryBtn");
+const soundBtn = document.getElementById("soundBtn");
+const restartBtn = document.getElementById("restartBtn");
+
+const introModal = document.getElementById("introModal");
+const diaryModal = document.getElementById("diaryModal");
+const puzzleModal = document.getElementById("puzzleModal");
+const winModal = document.getElementById("winModal");
+
+const startBtn = document.getElementById("startBtn");
+const diaryCloseBtn = document.getElementById("diaryCloseBtn");
+const playAgainBtn = document.getElementById("playAgainBtn");
+
+const taskTitle = document.getElementById("taskTitle");
+const taskCode = document.getElementById("taskCode");
+const answerInput = document.getElementById("answerInput");
+const feedback = document.getElementById("feedback");
+const hintText = document.getElementById("hintText");
+const checkBtn = document.getElementById("checkBtn");
+const hintBtn = document.getElementById("hintBtn");
+const runBtn = document.getElementById("runBtn");
+
+let audioCtx = null;
+let state = null;
+let gameTimeout = null;
+let invulnerableUntil = 0;
+
+function initState(){
+  let px=1, py=1;
+  for(let y=0;y<MAP.length;y++)
+    for(let x=0;x<MAP[y].length;x++)
+      if(MAP[y][x]==="P"){px=x;py=y;}
+  state = {
+    player:{x:px,y:py}, collected:new Set(), potions:3, deaths:0,
+    activeTask:null, usedHints:new Set(), sound:true, busy:false,
+    started:false, won:false
+  };
+  for(const e of ENEMIES){
+    if(e.axis==="h"){ e.x=e.min; e.y=e.line; }
+    else { e.x=e.line; e.y=e.min; }
+    e.dir = e.startDir || 1;
+    e.chasing=false; e.wasChasing=false;
+  }
+  invulnerableUntil = 0;
+}
+
+function showOverlay(id){document.getElementById(id).classList.remove("hidden")}
+function hideOverlay(id){document.getElementById(id).classList.add("hidden")}
+function hideAllOverlays(){document.querySelectorAll(".overlay").forEach(el=>el.classList.add("hidden"))}
+function isModalOpen(){return !!document.querySelector(".overlay:not(.hidden)")}
+
+function updateHUD(){
+  potionsEl.textContent = `🧪 Potions: ${state.potions}`;
+  fragmentsEl.textContent = `📜 Scrolls: ${state.collected.size}/${TASKS.length}`;
+  deathsEl.textContent = `💀 Deaths: ${state.deaths}`;
+  soundBtn.textContent = state.sound ? "🔊" : "🔇";
+}
+
+function beep(freq=440, dur=0.06, type="sine"){
+  if(!state.sound) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const osc=audioCtx.createOscillator(), g=audioCtx.createGain();
+    osc.type=type; osc.frequency.value=freq; g.gain.value=0.04;
+    osc.connect(g); g.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime+dur);
+  }catch(e){}
+}
+
+function showToast(msg, duration=2500){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), duration);
+}
+
+function isPaused(){
+  return !state.started || state.won || isModalOpen();
+}
+
+function updatePauseOverlay(){
+  if(isPaused() && state.started && !state.won) pauseOverlay.classList.remove("hidden");
+  else pauseOverlay.classList.add("hidden");
+}
+
+function isWall(x,y){
+  if(y<0||y>=MAP.length||x<0||x>=MAP[0].length) return true;
+  return MAP[y][x]==="#";
+}
+
+// ============ SPEED: Level 2 is faster ============
+function getCurrentTickMs(){
+  const prog = state.collected.size;
+  return Math.max(200, 350 - prog*20);
+}
+
+// ============ ENEMY LOGIC ============
+function isLineClearH(x1,y,x2){
+  const from=Math.min(x1,x2), to=Math.max(x1,x2);
+  for(let x=from+1;x<to;x++) if(MAP[y][x]==="#") return false;
+  return true;
+}
+function isLineClearV(x,y1,y2){
+  const from=Math.min(y1,y2), to=Math.max(y1,y2);
+  for(let y=from+1;y<to;y++) if(MAP[y][x]==="#") return false;
+  return true;
+}
+
+function getChaseDir(e){
+  const px=state.player.x, py=state.player.y;
+  if(e.axis==="h" && e.y===py){
+    const dist=Math.abs(e.x-px);
+    if(dist>0 && dist<=e.chaseRange && isLineClearH(e.x,e.y,px))
+      return px>e.x ? 1 : -1;
+  }
+  if(e.axis==="v" && e.x===px){
+    const dist=Math.abs(e.y-py);
+    if(dist>0 && dist<=e.chaseRange && isLineClearV(e.x,e.y,py))
+      return py>e.y ? 1 : -1;
+  }
+  return null;
+}
+
+function clampEnemy(e){
+  if(e.axis==="h"){ if(e.x>e.max)e.x=e.max; if(e.x<e.min)e.x=e.min; }
+  else { if(e.y>e.max)e.y=e.max; if(e.y<e.min)e.y=e.min; }
+}
+
+function moveEnemy(e){
+  if(e.canChase){
+    const cd = getChaseDir(e);
+    if(cd!==null){
+      e.chasing=true;
+      if(!e.wasChasing) beep(200,0.15,"sawtooth");
+      e.wasChasing=true;
+      const steps = e.chaseSteps || 1;
+      for(let i=0;i<steps;i++){
+        if(e.axis==="h") e.x+=cd; else e.y+=cd;
+        clampEnemy(e);
+        if(e.x===state.player.x && e.y===state.player.y) break;
+      }
+      return;
+    }
+  }
+  e.chasing=false;
+  e.wasChasing=false;
+
+  let steps = 1;
+  if(Math.random() < (e.burstChance||0))
+    steps = Math.random()<0.5 ? 2 : 3;
+
+  for(let i=0;i<steps;i++){
+    if(Math.random() < (e.turnChance||0)) e.dir*= -1;
+    if(e.axis==="h") e.x+=e.dir; else e.y+=e.dir;
+
+    if(e.axis==="h"){
+      if(e.x>e.max){e.x=e.max;e.dir=-1;}
+      else if(e.x<e.min){e.x=e.min;e.dir=1;}
+    } else {
+      if(e.y>e.max){e.y=e.max;e.dir=-1;}
+      else if(e.y<e.min){e.y=e.min;e.dir=1;}
+    }
+    if(isWall(e.x,e.y)){
+      if(e.axis==="h") e.x-=e.dir; else e.y-=e.dir;
+      e.dir*= -1;
+    }
+  }
+}
+
+function getRouteCells(e){
+  const cells=[];
+  if(e.axis==="h"){ for(let x=e.min;x<=e.max;x++) cells.push({x,y:e.line}); }
+  else { for(let y=e.min;y<=e.max;y++) cells.push({x:e.line,y}); }
+  return cells;
+}
+
+// ============ GAME LOOP ============
+function loopStep(){
+  if(!state.started || state.won){ gameTimeout=null; return; }
+  if(!isPaused()) gameTick();
+  gameTimeout = setTimeout(loopStep, getCurrentTickMs());
+}
+function startGameLoop(){ if(!gameTimeout) gameTimeout=setTimeout(loopStep, getCurrentTickMs()); }
+function stopGameLoop(){ if(gameTimeout){clearTimeout(gameTimeout);gameTimeout=null;} }
+
+function gameTick(){
+  for(const e of ENEMIES) moveEnemy(e);
+  checkEnemyCollision();
+  renderBoard();
+}
+
+function checkEnemyCollision(){
+  if(Date.now() < invulnerableUntil) return false;
+  for(const e of ENEMIES){
+    if(e.x===state.player.x && e.y===state.player.y){
+      state.deaths++;
+      state.player.x=1; state.player.y=1;
+      invulnerableUntil = Date.now()+2000;
+      board.classList.add("shake");
+      setTimeout(()=>board.classList.remove("shake"),400);
+      beep(120,0.3,"sawtooth");
+      setTimeout(()=>beep(90,0.2,"sawtooth"),150);
+      showToast(`💥 The ${e.name} attacked you! Returning to start.`,2800);
+      updateHUD();
+      renderBoard();
+      return true;
+    }
+  }
+  return false;
+}
+
+function isEnemyNear(){
+  const px=state.player.x, py=state.player.y;
+  for(const e of ENEMIES){
+    const dist=Math.abs(e.x-px)+Math.abs(e.y-py);
+    if(dist<=2) return true;
+  }
+  return false;
+}
+
+function renderBoard(){
+  board.innerHTML="";
+  const rows=MAP.length, cols=MAP[0].length;
+  board.style.gridTemplateColumns = `repeat(${cols}, var(--cell))`;
+
+  const routeSet=new Set();
+  for(const e of ENEMIES)
+    for(const c of getRouteCells(e)) routeSet.add(c.x+","+c.y+":"+e.pathClass);
+
+  const isInvulnerable = Date.now() < invulnerableUntil;
+  const enemyNear = isEnemyNear();
+
+  for(let y=0;y<rows;y++){
+    for(let x=0;x<cols;x++){
+      const cell=document.createElement("div");
+      cell.className="cell";
+      const ch=MAP[y][x];
+
+      for(const e of ENEMIES)
+        if(routeSet.has(x+","+y+":"+e.pathClass)) cell.classList.add(e.pathClass);
+
+      let enemyHere=null;
+      for(const e of ENEMIES) if(e.x===x && e.y===y){ enemyHere=e; break; }
+
+      if(x===state.player.x && y===state.player.y){
+        cell.textContent="🧙"; cell.classList.add("player");
+        if(isInvulnerable) cell.classList.add("invulnerable");
+        if(enemyNear && !isInvulnerable) cell.classList.add("danger-near");
+      } else if(enemyHere){
+        cell.textContent=enemyHere.emoji;
+        cell.classList.add("enemy");
+        if(enemyHere.chasing) cell.classList.add("chasing");
+      } else if(ch==="#"){
+        cell.textContent="🧱"; cell.classList.add("wall");
+      } else if(ch>="1" && ch<="8"){
+        const idx=Number(ch)-1;
+        if(!state.collected.has(idx)){ cell.textContent="🔒"; cell.classList.add("seal"); }
+        else { cell.textContent="✨"; cell.classList.add("done"); }
+      } else {
+        cell.textContent="·"; cell.classList.add("floor");
+      }
+      board.appendChild(cell);
+    }
+  }
+  updateHUD();
+}
+
+function tryMove(dx,dy){
+  if(state.busy || isPaused()) return;
+  const nx=state.player.x+dx, ny=state.player.y+dy;
+  if(ny<0||ny>=MAP.length||nx<0||nx>=MAP[0].length) return;
+  const ch=MAP[ny][nx];
+  if(ch==="#"){beep(110,.07,"square");return;}
+  state.player.x=nx; state.player.y=ny;
+  beep(320,.03);
+  if(checkEnemyCollision()) return;
+  if(ch>="1" && ch<="8"){
+    const idx=Number(ch)-1;
+    if(!state.collected.has(idx)){ renderBoard(); openPuzzle(idx); return; }
+  }
+  renderBoard();
+}
+
+function openPuzzle(idx){
+  state.activeTask=idx;
+  taskTitle.textContent=TASKS[idx].title;
+  taskCode.textContent=TASKS[idx].code;
+  answerInput.value="";
+  feedback.textContent=""; feedback.className="feedback";
+  hintText.textContent="";
+  showOverlay("puzzleModal");
+  updatePauseOverlay();
+  setTimeout(()=>answerInput.focus(),50);
+}
+function closePuzzle(){
+  hideOverlay("puzzleModal");
+  state.activeTask=null;
+  updatePauseOverlay();
+  renderBoard();
+}
+
+function checkAnswer(){
+  if(state.activeTask===null||state.busy) return;
+  const idx=state.activeTask;
+  const given=answerInput.value.trim();
+  if(!given){ feedback.textContent="❌ Please enter an answer first."; feedback.className="feedback bad"; return; }
+  if(given===TASKS[idx].answer){
+    state.busy=true;
+    state.collected.add(idx);
+    feedback.textContent="✅ Correct! The seal breaks…";
+    feedback.className="feedback good";
+    updateHUD();
+    beep(700,.12);
+    setTimeout(()=>beep(980,.16),120);
+    setTimeout(()=>{
+      state.busy=false;
+      hideOverlay("puzzleModal");
+      state.activeTask=null;
+      updatePauseOverlay();
+      renderBoard();
+      if(state.collected.size===TASKS.length) showWin();
+    },900);
+  } else {
+    feedback.textContent="❌ Incorrect. Check case, spaces, and order of operations!";
+    feedback.className="feedback bad";
+    beep(160,.12,"square");
+  }
+}
+
+function useHint(){
+  if(state.activeTask===null) return;
+  const idx=state.activeTask;
+  if(state.usedHints.has(idx)){ hintText.textContent="🧪 "+TASKS[idx].hint; return; }
+  if(state.potions<=0){ hintText.textContent="🧪 Out of potions!"; return; }
+  state.potions--; state.usedHints.add(idx);
+  hintText.textContent="🧪 "+TASKS[idx].hint;
+  updateHUD(); beep(620,.08);
+}
+
+function showWin(){
+  state.won=true;
+  stopGameLoop();
+  document.getElementById("winStats").textContent =
+    `💀 Deaths: ${state.deaths} | 🧪 Potions used: ${3-state.potions}`;
+  showOverlay("winModal");
+  updatePauseOverlay();
+  beep(660,.12);
+  setTimeout(()=>beep(880,.16),140);
+  setTimeout(()=>beep(1040,.20),300);
+  showToast("🏆 VICTORY! Catacombs cleared!",3500);
+}
+
+function resetGame(){
+  stopGameLoop();
+  initState();
+  hideAllOverlays();
+  renderBoard();
+  updateHUD();
+  updatePauseOverlay();
+  showOverlay("introModal");
+}
+
+startBtn.addEventListener("click",()=>{
+  if(audioCtx && audioCtx.state==="suspended") audioCtx.resume();
+  hideOverlay("introModal");
+  state.started=true;
+  startGameLoop();
+  updatePauseOverlay();
+  beep(440,.08);
+});
+diaryBtn.addEventListener("click",()=>{ showOverlay("diaryModal"); updatePauseOverlay(); });
+diaryCloseBtn.addEventListener("click",()=>{ hideOverlay("diaryModal"); updatePauseOverlay(); });
+soundBtn.addEventListener("click",()=>{ state.sound=!state.sound; updateHUD(); if(state.sound) beep(520,.06); });
+restartBtn.addEventListener("click",resetGame);
+playAgainBtn.addEventListener("click",resetGame);
+checkBtn.addEventListener("click",checkAnswer);
+hintBtn.addEventListener("click",useHint);
+runBtn.addEventListener("click",closePuzzle);
+answerInput.addEventListener("input",()=>{ feedback.textContent=""; feedback.className="feedback"; });
+
+document.querySelectorAll("#controls button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const d=btn.dataset.dir;
+    if(d==="up") tryMove(0,-1);
+    if(d==="down") tryMove(0,1);
+    if(d==="left") tryMove(-1,0);
+    if(d==="right") tryMove(1,0);
+  });
+});
+
+document.addEventListener("keydown",(e)=>{
+  const p=!puzzleModal.classList.contains("hidden");
+  const i=!introModal.classList.contains("hidden");
+  const d=!diaryModal.classList.contains("hidden");
+  const w=!winModal.classList.contains("hidden");
+  if(p){ if(e.key==="Enter"){e.preventDefault();checkAnswer();} if(e.key==="Escape")closePuzzle(); return; }
+  if(i){ if(e.key==="Enter"){e.preventDefault();startBtn.click();} return; }
+  if(d){ if(e.key==="Escape")diaryCloseBtn.click(); return; }
+  if(w){ if(e.key==="Enter")playAgainBtn.click(); return; }
+  const k=e.key.toLowerCase();
+  if(["arrowup","arrowdown","arrowleft","arrowright"].includes(k)) e.preventDefault();
+  if(k==="arrowup"||k==="w") tryMove(0,-1);
+  if(k==="arrowdown"||k==="s") tryMove(0,1);
+  if(k==="arrowleft"||k==="a") tryMove(-1,0);
+  if(k==="arrowright"||k==="d") tryMove(1,0);
+});
+
+initState();
+renderBoard();
+updateHUD();
+showOverlay("introModal");
+</script>
+</body>
+</html>
