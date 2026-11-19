@@ -192,7 +192,7 @@
       <div class="rule"><b>s[start:stop]</b> — Slice, 'stop' is NOT included.<br><code>"treasure"[0:4] → 'trea'</code></div>
       <div class="rule"><b>s[::-1]</b> — Reverse the string.<br><code>"cat"[::-1] → 'tac'</code></div>
       <div class="rule"><b>s.strip().lower()</b> — Chain methods left to right.<br><code>"  MAGE  ".strip().lower() → 'mage'</code></div>
-      <div class="rule"><b>s.replace("old", "new")</b> — replaces parts of a string.<br><code>"frog".replace("fr", "dr") → 'dog'</code></div>
+      <div class="rule"><b>s.replace("old", "new")</b> — replaces parts of a string.<br><code>"frog".replace("fr", "d") → 'dog'</code></div>
       <div class="rule"><b>count() + count()</b> — Results can be added.<br><code>"abracadabra".count("a") + ... → number</code></div>
       <div class="rule"><b>s[1:4].upper()</b> — Slice, then apply method.<br><code>"python"[1:4].upper() → 'YTH'</code></div>
     </div>
@@ -261,8 +261,8 @@ const TASKS = [
     hint:`[::-1] flips the string backwards: c→a→t becomes t→a→c.` },
   { id:5, title:"Seal V — Method Chaining", code:`s = "  MAGE  "\nprint(s.strip().lower())`, answer:`mage`,
     hint:`First, strip() removes outer spaces. Then, lower() makes letters lowercase. Methods run left to right.` },
-  { id:6, title:"Seal VI — Replace", code:`s = "frog"\nprint(s.replace("fr", "dr"))`, answer:`dog`,
-    hint:`replace("fr", "dr") finds the "fr" part of the string and changes it to "dr".` },
+  { id:6, title:"Seal VI — Replace", code:`s = "frog"\nprint(s.replace("fr", "d"))`, answer:`dog`,
+    hint:`replace("fr", "d") finds "fr" at the start and replaces it with "d". frog → dog!` },
   { id:7, title:"Seal VII — Count & Math", code:`s = "abracadabra"\nprint(s.count("a") + s.count("b"))`, answer:`7`,
     hint:`count("a") finds how many "a"s there are (5), count("b") finds "b"s (2). Then they are added together.` },
   { id:8, title:"Seal VIII — Slice + Upper", code:`s = "python"\nprint(s[1:4].upper())`, answer:`YTH`,
